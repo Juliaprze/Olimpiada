@@ -283,3 +283,4 @@ C:\Users\LENOVO\RiderProjects\Olimpiada\Olimpiada\bin\Debug\net8.0\runtimes\win\
 C:\Users\LENOVO\RiderProjects\Olimpiada\Olimpiada\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\LENOVO\RiderProjects\Olimpiada\Olimpiada\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
 C:\Users\LENOVO\RiderProjects\Olimpiada\Olimpiada\bin\Debug\net8.0\Dapper.dll
+C:\Users\LENOVO\RiderProjects\Olimpiada\Olimpiada\obj\Debug\net8.0\Olimpiada.sourcelink.json
