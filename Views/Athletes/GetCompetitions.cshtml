@@ -1,0 +1,21 @@
+﻿@model Olimpiada.Controllers.CompetitionsViewModel
+
+<h1>Starty sportowca ID: @Model.AthleteId</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID Zawodów</th>
+        <th>Nazwa Zawodów</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var competition in Model.Competitions)
+    {
+    <tr>
+        <td>@competition.EventId</td>
+        <td>@competition.EventName</td>
+    </tr>
+    }
+    </tbody>
+</table>
+<a href="/athletes">Powrót do listy sportowców</a>
