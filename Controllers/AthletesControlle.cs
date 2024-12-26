@@ -34,7 +34,7 @@ namespace Olimpiada.Controllers
                 .Select(person => new AthleteViewModel
                 {
                     FullName = person.FullName,
-                    Weight = person.Weight ?? 0, // Obsługa wartości null
+                    Weight = person.Weight ?? 0, 
                     Height = person.Height ?? 0,
                     Gender = person.Gender,
                     GoldMedals = _context.CompetitorEvents.Count(ce => ce.Competitor.PersonId == person.Id && ce.Medal.MedalName == "Gold"),
@@ -55,7 +55,7 @@ namespace Olimpiada.Controllers
                 Athletes = athletes
             };
 
-            return View(viewModel); // Wygeneruje widok listy
+            return View(viewModel); 
         }
 
         [HttpGet("{id}/competitions")]
@@ -65,11 +65,11 @@ namespace Olimpiada.Controllers
             {
                 var competitions = _context.CompetitorEvents
                     .Where(ce => ce.Competitor.PersonId == id)
-                    .AsEnumerable() // Konwertujemy do IEnumerable, aby użyć operatorów LINQ w pamięci
+                    .AsEnumerable() 
                     .Select(ce => new CompetitionViewModel
                     {
-                        EventId = ce.EventId ?? 0, // Domyślna wartość, jeśli EventId jest null
-                        EventName = ce.Event?.EventName ?? "Unknown" // Bezpieczny dostęp do EventName
+                        EventId = ce.EventId ?? 0, 
+                        EventName = ce.Event?.EventName ?? "Unknown" 
                     })
                     .ToList();
 
@@ -90,7 +90,7 @@ namespace Olimpiada.Controllers
     public class AthleteViewModel
     {
         public string FullName { get; set; }
-        public int Weight { get; set; } // Zmiana na `int` z domyślną wartością
+        public int Weight { get; set; } 
         public int Height { get; set; }
         public string Gender { get; set; }
         public int GoldMedals { get; set; }
