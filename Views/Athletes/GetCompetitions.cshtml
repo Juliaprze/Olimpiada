@@ -1,7 +1,7 @@
 ﻿@model Olimpiada.Controllers.CompetitionsDetailViewModel
 
-<h1>Udziały sportowca ID: @Model.AthleteId</h1>
-<table class="table table-bordered">
+<h1>Starty sportowca ID: @Model.AthleteId</h1>
+<table class="table table-bordered table-striped">
     <thead>
     <tr>
         <th>Dyscyplina</th>
@@ -20,12 +20,12 @@
             <td>@competition.EventName</td>
             <td>@competition.Olympics</td>
             <td>@competition.Season</td>
-            <td>@(competition.AthleteAge.HasValue ? competition.AthleteAge.ToString() : "Brak danych")</td>
+            <td>@competition.AthleteAge</td>
             <td>@competition.Medal</td>
         </tr>
     }
     </tbody>
 </table>
 
-<a class="btn btn-primary" asp-action="AddEvent" asp-route-id="@Model.AthleteId">Dodaj wydarzenie</a>
-<a class="btn btn-secondary" href="/athletes">Powrót do listy sportowców</a>
+<a href="/athletes/@Model.AthleteId/add-event" class="btn btn-primary">Dodaj wydarzenie</a>
+<a href="/athletes" class="btn btn-secondary">Powrót do listy sportowców</a>

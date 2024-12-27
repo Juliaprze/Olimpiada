@@ -1,28 +1,30 @@
 ﻿@model Olimpiada.Controllers.AddEventViewModel
 
-<h1>Dodaj wydarzenie dla sportowca</h1>
-<p>Sportowiec: @ViewBag.AthleteName</p>
+<h1>Dodaj wydarzenie dla sportowca ID: @Model.AthleteId</h1>
 
 <form asp-action="AddEvent" method="post">
-    <input type="hidden" asp-for="AthleteId" />
+    <input type="hidden" name="AthleteId" value="@Model.AthleteId" />
 
     <div class="form-group">
-        <label for="EventId">Wydarzenie</label>
-        <select asp-for="EventId" asp-items="@(new SelectList(ViewBag.Events, "Id", "EventName"))" class="form-control">
-            <option value="">Wybierz wydarzenie</option>
+        <label for="EventId">Wybierz wydarzenie:</label>
+        <select id="EventId" name="EventId" class="form-control">
+            @foreach (var evt in ViewBag.Events)
+            {
+            <option value="@evt.Id">@evt.EventName</option>
+            }
         </select>
     </div>
 
     <div class="form-group">
-        <label for="MedalId">Medal</label>
-        <select asp-for="MedalId" class="form-control">
-            <option value="">Brak medalu</option>
+        <label for="MedalId">Wybierz medal (opcjonalnie):</label>
+        <select id="MedalId" name="MedalId" class="form-control">
+            <option value="">Brak</option>
             <option value="1">Złoty</option>
             <option value="2">Srebrny</option>
             <option value="3">Brązowy</option>
         </select>
     </div>
 
-    <button type="submit" class="btn btn-success">Dodaj</button>
-    <a href="/athletes" class="btn btn-secondary">Anuluj</a>
+    <button type="submit" class="btn btn-primary">Dodaj wydarzenie</button>
+    <a href="/athletes/@Model.AthleteId/competitions" class="btn btn-secondary">Anuluj</a>
 </form>

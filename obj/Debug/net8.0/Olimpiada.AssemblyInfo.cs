@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Olimpiada")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6873ab3fa0dd572b041b40e4c6af2caa44539804")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e539f0b0f862450f6325d23bf8a9bf801472b11a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Olimpiada")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Olimpiada")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
