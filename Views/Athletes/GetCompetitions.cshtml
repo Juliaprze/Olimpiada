@@ -1,21 +1,31 @@
-﻿@model Olimpiada.Controllers.CompetitionsViewModel
+﻿@model Olimpiada.Controllers.CompetitionsDetailViewModel
 
-<h1>Starty sportowca ID: @Model.AthleteId</h1>
-<table>
+<h1>Udziały sportowca ID: @Model.AthleteId</h1>
+<table class="table table-bordered">
     <thead>
     <tr>
-        <th>ID Zawodów</th>
-        <th>Nazwa Zawodów</th>
+        <th>Dyscyplina</th>
+        <th>Wydarzenie</th>
+        <th>Olimpiada</th>
+        <th>Sezon</th>
+        <th>Wiek sportowca</th>
+        <th>Medal</th>
     </tr>
     </thead>
     <tbody>
     @foreach (var competition in Model.Competitions)
     {
-    <tr>
-        <td>@competition.EventId</td>
-        <td>@competition.EventName</td>
-    </tr>
+        <tr>
+            <td>@competition.SportName</td>
+            <td>@competition.EventName</td>
+            <td>@competition.Olympics</td>
+            <td>@competition.Season</td>
+            <td>@(competition.AthleteAge.HasValue ? competition.AthleteAge.ToString() : "Brak danych")</td>
+            <td>@competition.Medal</td>
+        </tr>
     }
     </tbody>
 </table>
-<a href="/athletes">Powrót do listy sportowców</a>
+
+<a class="btn btn-primary" asp-action="AddEvent" asp-route-id="@Model.AthleteId">Dodaj wydarzenie</a>
+<a class="btn btn-secondary" href="/athletes">Powrót do listy sportowców</a>

@@ -26,6 +26,14 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\LENOVO\RiderProjects\Olimpiada\Olimpiada
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/LENOVO/RiderProjects/Olimpiada/Olimpiada/Views/Athletes/AddEvent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXRobGV0ZXNcQWRkRXZlbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/LENOVO/RiderProjects/Olimpiada/Olimpiada/Views/Athletes/GetCompetitionDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXRobGV0ZXNcR2V0Q29tcGV0aXRpb25EZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/LENOVO/RiderProjects/Olimpiada/Olimpiada/Views/Athletes/GetCompetitions.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXRobGV0ZXNcR2V0Q29tcGV0aXRpb25zLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

@@ -1,0 +1,28 @@
+﻿@model Olimpiada.Controllers.AddEventViewModel
+
+<h1>Dodaj wydarzenie dla sportowca</h1>
+<p>Sportowiec: @ViewBag.AthleteName</p>
+
+<form asp-action="AddEvent" method="post">
+    <input type="hidden" asp-for="AthleteId" />
+
+    <div class="form-group">
+        <label for="EventId">Wydarzenie</label>
+        <select asp-for="EventId" asp-items="@(new SelectList(ViewBag.Events, "Id", "EventName"))" class="form-control">
+            <option value="">Wybierz wydarzenie</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="MedalId">Medal</label>
+        <select asp-for="MedalId" class="form-control">
+            <option value="">Brak medalu</option>
+            <option value="1">Złoty</option>
+            <option value="2">Srebrny</option>
+            <option value="3">Brązowy</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Dodaj</button>
+    <a href="/athletes" class="btn btn-secondary">Anuluj</a>
+</form>

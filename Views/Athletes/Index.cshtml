@@ -1,16 +1,16 @@
 ﻿@model Olimpiada.Controllers.AthleteListViewModel
 
-<h1>Lista sportowców</h1>
-<table>
+<h1>Lista Sportowców</h1>
+<table class="table table-bordered table-striped">
     <thead>
     <tr>
         <th>Imię i nazwisko</th>
-        <th>Waga</th>
-        <th>Wzrost</th>
+        <th>Waga (kg)</th>
+        <th>Wzrost (cm)</th>
         <th>Płeć</th>
-        <th>Złote medale</th>
-        <th>Srebrne medale</th>
-        <th>Brązowe medale</th>
+        <th>Złote Medale</th>
+        <th>Srebrne Medale</th>
+        <th>Brązowe Medale</th>
         <th>Starty</th>
     </tr>
     </thead>
@@ -19,26 +19,18 @@
     {
     <tr>
         <td>@athlete.FullName</td>
-        <td>@athlete.Weight</td>
-        <td>@athlete.Height</td>
-        <td>@athlete.Gender</td>
+        <td>@(athlete.Weight.HasValue ? athlete.Weight.ToString() : "Brak danych")</td>
+        <td>@(athlete.Height.HasValue ? athlete.Height.ToString() : "Brak danych")</td>
+        <td>@(!string.IsNullOrEmpty(athlete.Gender) ? athlete.Gender : "Brak danych")</td>
         <td>@athlete.GoldMedals</td>
         <td>@athlete.SilverMedals</td>
         <td>@athlete.BronzeMedals</td>
-        <td><a href="@athlete.CompetitionsLink">Zobacz starty (@athlete.CompetitionsCount)</a></td>
+        <td>
+            <a class="btn btn-link" asp-controller="Athletes" asp-action="GetCompetitions" asp-route-id="@athlete.CompetitionsLink">
+                Zobacz starty (@athlete.CompetitionsCount)
+            </a>
+        </td>
     </tr>
     }
     </tbody>
 </table>
-
-<p>Strona @Model.CurrentPage z @((Model.TotalAthletes + Model.PageSize - 1) / Model.PageSize)</p>
-<div>
-    @if (Model.CurrentPage > 1)
-    {
-    <a href="?page=@(Model.CurrentPage - 1)&pageSize=@Model.PageSize">Poprzednia</a>
-    }
-    @if (Model.CurrentPage < (Model.TotalAthletes + Model.PageSize - 1) / Model.PageSize)
-    {
-    <a href="?page=@(Model.CurrentPage + 1)&pageSize=@Model.PageSize">Następna</a>
-    }
-</div>
