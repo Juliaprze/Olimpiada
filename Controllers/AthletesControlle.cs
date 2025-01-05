@@ -12,13 +12,14 @@ namespace Olimpiada.Controllers
     public class AthletesController : Controller
     {
         private readonly OlympicsContext _context;
+        
+        private static readonly List<AddEventViewModel> _temporaryEvents = new();
 
         public AthletesController(OlympicsContext context)
         {
             _context = context;
         }
 
-      
         public IActionResult Index([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
             if (page < 1 || pageSize < 1)
@@ -40,7 +41,11 @@ namespace Olimpiada.Controllers
                     GoldMedals = _context.CompetitorEvents.Count(ce => ce.Competitor.PersonId == person.Id && ce.Medal.MedalName == "Gold"),
                     SilverMedals = _context.CompetitorEvents.Count(ce => ce.Competitor.PersonId == person.Id && ce.Medal.MedalName == "Silver"),
                     BronzeMedals = _context.CompetitorEvents.Count(ce => ce.Competitor.PersonId == person.Id && ce.Medal.MedalName == "Bronze"),
-                    CompetitionsCount = _context.CompetitorEvents.Count(ce => ce.Competitor.PersonId == person.Id),
+                    CompetitionsCount = _context.GamesCompetitors
+                        .Where(gc => gc.PersonId == person.Id)
+                        .Select(gc => gc.GamesId)
+                        .Distinct()
+                        .Count(),
                     CompetitionsLink = person.Id.ToString()
                 })
                 .OrderBy(person => person.FullName)
@@ -54,10 +59,16 @@ namespace Olimpiada.Controllers
                 Athletes = athletes
             };
 
+            ViewBag.HasPreviousPage = page > 1;
+            ViewBag.HasNextPage = (page * pageSize) < totalAthletes;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalAthletes / (double)pageSize);
+
             return View(viewModel);
         }
 
-        [HttpGet("{id}/competitions")]
+
+
+       [HttpGet("{id}/competitions")]
         public IActionResult GetCompetitions(int id)
         {
             var competitionsData = _context.GamesCompetitors
@@ -84,6 +95,20 @@ namespace Olimpiada.Controllers
                 })
                 .ToList();
 
+            var tempEvents = _temporaryEvents
+                .Where(e => e.AthleteId == id)
+                .Select(e => new CompetitionDetailViewModel
+                {
+                    SportName = e.SportName,
+                    EventName = e.EventName,
+                    Olympics = e.Olympics,
+                    AthleteAge = e.AthleteAge.ToString(),
+                    Medal = string.Empty
+                })
+                .ToList();
+
+            competitions.AddRange(tempEvents);
+
             return View("GetCompetitions", new CompetitionsDetailViewModel
             {
                 AthleteId = id,
@@ -101,31 +126,23 @@ namespace Olimpiada.Controllers
             }
 
             ViewBag.AthleteName = athlete.FullName ?? "Nieznany sportowiec";
-            ViewBag.Events = _context.Events.Select(e => new { e.Id, e.EventName }).ToList();
 
-            return View(new AddEventViewModel { AthleteId = id });
+            return View(new AddEventViewModel
+            {
+                AthleteId = id
+            });
         }
 
-
         [HttpPost("{id}/add-event")]
-        public IActionResult AddEvent(AddEventViewModel model)
+        public IActionResult AddEvent([FromForm] AddEventViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Events = _context.Events.Select(e => new { e.Id, e.EventName }).ToList();
+                ViewBag.AthleteName = _context.People.FirstOrDefault(p => p.Id == model.AthleteId)?.FullName ?? "Nieznany sportowiec";
                 return View(model);
             }
 
-            var newEvent = new CompetitorEvent
-            {
-                CompetitorId = model.AthleteId,
-                EventId = model.EventId,
-                MedalId = model.MedalId
-            };
-
-            _context.CompetitorEvents.Add(newEvent);
-            _context.SaveChanges();
-
+            _temporaryEvents.Add(model); 
             return RedirectToAction("GetCompetitions", new { id = model.AthleteId });
         }
 
@@ -165,8 +182,6 @@ namespace Olimpiada.Controllers
                 Competitions = competitions
             });
         }
-
-
     }
 
     public class AthleteViewModel
@@ -209,7 +224,9 @@ namespace Olimpiada.Controllers
     public class AddEventViewModel
     {
         public int AthleteId { get; set; }
-        public int EventId { get; set; }
-        public int? MedalId { get; set; }
+        public string SportName { get; set; }
+        public string EventName { get; set; }
+        public string Olympics { get; set; }
+        public int AthleteAge { get; set; }
     }
 }

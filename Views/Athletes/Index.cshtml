@@ -34,3 +34,17 @@
     }
     </tbody>
 </table>
+
+<div class="d-flex justify-content-between mt-4">
+    @if (ViewBag.HasPreviousPage != null && ViewBag.HasPreviousPage)
+    {
+    <a class="btn btn-primary" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Wstecz</a>
+    }
+
+    <span class="align-self-center">Strona @Model.CurrentPage z @(ViewBag.TotalPages)</span>
+
+    @if (ViewBag.HasNextPage != null && ViewBag.HasNextPage)
+    {
+    <a class="btn btn-primary" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Dalej</a>
+    }
+</div>
