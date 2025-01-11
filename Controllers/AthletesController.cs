@@ -63,9 +63,11 @@ namespace Olimpiada.Controllers
             ViewBag.HasPreviousPage = page > 1;
             ViewBag.HasNextPage = (page * pageSize) < totalAthletes;
             ViewBag.TotalPages = (int)Math.Ceiling(totalAthletes / (double)pageSize);
+            ViewBag.CurrentPage = page; 
 
             return View(viewModel);
         }
+
 
 
         [HttpGet("{id}/competitions")]

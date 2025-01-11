@@ -1,34 +1,40 @@
 ﻿@model Olimpiada.Models.Olimpiada.AddEventViewModel
 
-<h2>Dodaj nowe wydarzenie dla sportowca</h2>
+<h1>Dodaj nowe wydarzenie dla sportowca: @ViewBag.AthleteName</h1>
 
-<form method="post" asp-controller="Athletes" asp-action="AddEvent">
+<form asp-action="AddEvent" method="post">
     <input type="hidden" asp-for="AthleteId" />
 
     <div class="form-group">
-        <label asp-for="SportName">Nazwa dyscyplina:</label>
-        <input asp-for="SportName" class="form-control" required />
+        <label asp-for="SportName">Nazwa dyscypliny:</label>
+        <input asp-for="SportName" class="form-control" maxlength="100"/>
         <span asp-validation-for="SportName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="EventName">Nzwa wydarzenie:</label>
-        <input asp-for="EventName" class="form-control" required />
+        <label asp-for="EventName">Nazwa wydarzenia:</label>
+        <input asp-for="EventName" class="form-control" maxlength="100"/>
         <span asp-validation-for="EventName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Olympics">Nazwa olimpiady:</label>
-        <input asp-for="Olympics" class="form-control" required />
+        <input asp-for="Olympics" class="form-control" maxlength="100"/>
         <span asp-validation-for="Olympics" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="AthleteAge">Wiek sportowca:</label>
-        <input asp-for="AthleteAge" type="number" class="form-control" required />
+        <input asp-for="AthleteAge" type="number" class="form-control" />
         <span asp-validation-for="AthleteAge" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Dodaj wydarzenie</button>
-    <a class="btn btn-secondary" asp-controller="Athletes" asp-action="Index">Anuluj</a>
+    <div class="d-flex justify-content-between mt-3">
+        <button type="submit" class="btn btn-primary">Dodaj wydarzenie</button>
+        <a class="btn btn-secondary" asp-controller="Athletes" asp-action="GetCompetitions" asp-route-id="@Model.AthleteId">Anuluj</a>
+    </div>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
