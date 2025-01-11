@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Olimpiada.Models.Olimpiada;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Olimpiada.Controllers
 {
@@ -12,7 +13,6 @@ namespace Olimpiada.Controllers
     public class AthletesController : Controller
     {
         private readonly OlympicsContext _context;
-        
         private static readonly List<AddEventViewModel> _temporaryEvents = new();
 
         public AthletesController(OlympicsContext context)
@@ -20,6 +20,7 @@ namespace Olimpiada.Controllers
             _context = context;
         }
 
+        [HttpGet("")]
         public IActionResult Index([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
             if (page < 1 || pageSize < 1)
@@ -41,9 +42,9 @@ namespace Olimpiada.Controllers
                     GoldMedals = _context.CompetitorEvents.Count(ce => ce.Competitor.PersonId == person.Id && ce.Medal.MedalName == "Gold"),
                     SilverMedals = _context.CompetitorEvents.Count(ce => ce.Competitor.PersonId == person.Id && ce.Medal.MedalName == "Silver"),
                     BronzeMedals = _context.CompetitorEvents.Count(ce => ce.Competitor.PersonId == person.Id && ce.Medal.MedalName == "Bronze"),
-                    CompetitionsCount = _context.GamesCompetitors
-                        .Where(gc => gc.PersonId == person.Id)
-                        .Select(gc => gc.GamesId)
+                    CompetitionsCount = _context.CompetitorEvents
+                        .Where(ce => ce.Competitor.PersonId == person.Id)
+                        .Select(ce => new { ce.EventId, ce.Competitor.GamesId })
                         .Distinct()
                         .Count(),
                     CompetitionsLink = person.Id.ToString()
@@ -67,31 +68,36 @@ namespace Olimpiada.Controllers
         }
 
 
-
-       [HttpGet("{id}/competitions")]
+        [HttpGet("{id}/competitions")]
         public IActionResult GetCompetitions(int id)
         {
-            var competitionsData = _context.GamesCompetitors
-                .Where(gc => gc.PersonId == id)
-                .Include(gc => gc.Games) 
-                .ToList(); 
+            var competitionsData = _context.CompetitorEvents
+                .Where(ce => ce.Competitor.PersonId == id)
+                .Include(ce => ce.Event)
+                .ThenInclude(e => e.Sport)
+                .Include(ce => ce.Medal)
+                .Include(ce => ce.Competitor)
+                .ThenInclude(c => c.Games)
+                .ToList();
 
             var competitions = competitionsData
-                .Select(gc =>
+                .Where(ce => ce.Event != null && ce.Competitor?.Games != null) 
+                .GroupBy(ce => new 
+                { 
+                    EventId = ce.EventId ?? 0,
+                    GamesId = ce.Competitor.GamesId ?? 0
+                }) 
+                .Select(group => group.First())
+                .Select(ce => new CompetitionDetailViewModel
                 {
-                    var firstEvent = _context.Events
-                        .Include(e => e.Sport) 
-                        .FirstOrDefault(e => e.Id == (gc.Games != null ? gc.Games.Id : 0));
-
-                    return new CompetitionDetailViewModel
-                    {
-                        SportName = firstEvent?.Sport?.SportName ?? "Nieznany sport",
-                        EventName = firstEvent?.EventName ?? "Nieznane wydarzenie",
-                        Olympics = gc.Games?.GamesName ?? "Nieznana olimpiada",
-                        Season = gc.Games?.Season ?? "Nieznany sezon",
-                        AthleteAge = gc.Age.HasValue ? gc.Age.ToString() : "Brak danych",
-                        Medal = "0" 
-                    };
+                    SportName = ce.Event?.Sport?.SportName ?? "Nieznany sport",
+                    EventName = ce.Event?.EventName ?? "Nieznane wydarzenie",
+                    Olympics = ce.Competitor?.Games?.GamesName ?? "Nieznana olimpiada",
+                    Season = ce.Competitor?.Games?.Season ?? "Nieznany sezon",
+                    AthleteAge = ce.Competitor?.Age.HasValue == true ? ce.Competitor.Age.ToString() : "Brak danych",
+                    Medal = ce.Medal != null && !string.IsNullOrEmpty(ce.Medal.MedalName) && ce.Medal.MedalName != "NA"
+                        ? ce.Medal.MedalName
+                        : "Brak medalu"
                 })
                 .ToList();
 
@@ -116,6 +122,7 @@ namespace Olimpiada.Controllers
             });
         }
 
+        [Authorize]
         [HttpGet("{id}/add-event")]
         public IActionResult AddEvent(int id)
         {
@@ -126,13 +133,10 @@ namespace Olimpiada.Controllers
             }
 
             ViewBag.AthleteName = athlete.FullName ?? "Nieznany sportowiec";
-
-            return View(new AddEventViewModel
-            {
-                AthleteId = id
-            });
+            return View(new AddEventViewModel { AthleteId = id });
         }
 
+        [Authorize]
         [HttpPost("{id}/add-event")]
         public IActionResult AddEvent([FromForm] AddEventViewModel model)
         {
@@ -142,7 +146,7 @@ namespace Olimpiada.Controllers
                 return View(model);
             }
 
-            _temporaryEvents.Add(model); 
+            _temporaryEvents.Add(model);
             return RedirectToAction("GetCompetitions", new { id = model.AthleteId });
         }
 
@@ -219,14 +223,5 @@ namespace Olimpiada.Controllers
     {
         public int AthleteId { get; set; }
         public List<CompetitionDetailViewModel> Competitions { get; set; }
-    }
-
-    public class AddEventViewModel
-    {
-        public int AthleteId { get; set; }
-        public string SportName { get; set; }
-        public string EventName { get; set; }
-        public string Olympics { get; set; }
-        public int AthleteAge { get; set; }
     }
 }

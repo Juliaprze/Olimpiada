@@ -17,20 +17,20 @@
     <tbody>
     @foreach (var athlete in Model.Athletes)
     {
-    <tr>
-        <td>@athlete.FullName</td>
-        <td>@(athlete.Weight.HasValue ? athlete.Weight.ToString() : "Brak danych")</td>
-        <td>@(athlete.Height.HasValue ? athlete.Height.ToString() : "Brak danych")</td>
-        <td>@(!string.IsNullOrEmpty(athlete.Gender) ? athlete.Gender : "Brak danych")</td>
-        <td>@athlete.GoldMedals</td>
-        <td>@athlete.SilverMedals</td>
-        <td>@athlete.BronzeMedals</td>
-        <td>
-            <a class="btn btn-link" asp-controller="Athletes" asp-action="GetCompetitions" asp-route-id="@athlete.CompetitionsLink">
-                Zobacz starty (@athlete.CompetitionsCount)
-            </a>
-        </td>
-    </tr>
+        <tr>
+            <td>@athlete.FullName</td>
+            <td>@(athlete.Weight.HasValue ? athlete.Weight.ToString() : "Brak danych")</td>
+            <td>@(athlete.Height.HasValue ? athlete.Height.ToString() : "Brak danych")</td>
+            <td>@(!string.IsNullOrEmpty(athlete.Gender) ? athlete.Gender : "Brak danych")</td>
+            <td>@athlete.GoldMedals</td>
+            <td>@athlete.SilverMedals</td>
+            <td>@athlete.BronzeMedals</td>
+            <td>
+                <a class="btn btn-link" asp-controller="Athletes" asp-action="GetCompetitions" asp-route-id="@athlete.CompetitionsLink">
+                    Zobacz starty (@athlete.CompetitionsCount)
+                </a>
+            </td>
+        </tr>
     }
     </tbody>
 </table>
@@ -38,13 +38,13 @@
 <div class="d-flex justify-content-between mt-4">
     @if (ViewBag.HasPreviousPage != null && ViewBag.HasPreviousPage)
     {
-    <a class="btn btn-primary" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Wstecz</a>
+        <a class="btn btn-primary" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Wstecz</a>
     }
 
     <span class="align-self-center">Strona @Model.CurrentPage z @(ViewBag.TotalPages)</span>
 
     @if (ViewBag.HasNextPage != null && ViewBag.HasNextPage)
     {
-    <a class="btn btn-primary" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Dalej</a>
+        <a class="btn btn-primary" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Dalej</a>
     }
 </div>
